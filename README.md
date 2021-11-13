@@ -1,7 +1,7 @@
 Original App Design Project - README Template
 ===
 
-# MarketPlace
+# APP_NAME_HERE
 
 ## Table of Contents
 1. [Overview](#Overview)
@@ -68,15 +68,80 @@ A marketplace application where users can buy and sell items. There will be filt
 [Add picture of your hand sketched wireframes in this section]
 <img src="YOUR_WIREFRAME_IMAGE_URL" width=600>
 
-### [BONUS] Digital Wireframes & Mockups
-
-### [BONUS] Interactive Prototype
 
 ## Schema 
-[This section will be completed in Unit 9]
+
 ### Models
-[Add table of models]
+Posts
+| Property| Type|Description|
+|---|---|---|
+| PostID  | INT  |  unique id |
+| User   |Pointer tp User   | the creator of post  |
+| price   | float   | the price of the item  |
+| date   | Date   | Date created  |
+| sold   | float   | the price the item sold for |
+
+User
+
+| Property| Type|Description|
+|---|---|---|
+| ID  | INT  |  unique id |
+| first_name   | varchar  | user first name |
+| last_name    | varchar   | user last name  |
+| username    | varchar   | username  |
+| password    | varchar   | password  |
+| profile_image    | File   | profile picture  |
+
+Images
+
+| Property| Type|Description|
+|---|---|---|
+| ID  | INT  |  unique id |
+|Image   |File   | image of item  |
+| PostId   | pointer to Posts   | the id of the post the image is associated with  |
+
+Messages
+
+| Property| Type|Description|
+|---|---|---|
+| ID  | INT  |  unique id |
+| From_user  | pointer to user  |  user that sent the message |
+|to_user   |pointer to user   | user that recieves the message  |
+| message   | varchar   | the message being sent  |
+| Date   | Date   | date sent  |
 ### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+
+
+* Home Feed Screen
+    * (Read/GET) Query all posts by date 
+* Create Post Screen
+    * (Create/POST) Create a new post object
+* Login/Signup  Screen
+    * (Create/POST) Create a new User 
+        ``` 
+        ParseUser user = new ParseUser();
+        // Set core properties
+        user.setUsername("joestevens");
+        user.setPassword("secret123");
+        user.setEmail("email@example.com");
+        // Set custom properties
+        user.put("phone", "650-253-0000");
+        // Invoke signUpInBackground
+        user.signUpInBackground(new SignUpCallback() {
+          public void done(ParseException e) {
+            if (e == null) {
+              // Hooray! Let them use the app now.
+            } else {
+              // Sign up didn't succeed. Look at the ParseException
+              // to figure out what went wrong
+            }
+          }
+        });
+        ```
+     * (Read/GET) Query username and password to sign in    
+* Profile  Screen
+    * (Read/GET) Query logged in user object
+    * (Update/PUT) Update user profile image
+* message screen
+    * (Create/POST) Create a new message 
+    * (Read/GET) Query all messages between the users
