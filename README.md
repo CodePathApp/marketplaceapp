@@ -26,11 +26,11 @@ A marketplace application where users can buy and sell items. There will be filt
 ### 1. User Stories (Required and Optional)
 
 **Required Must-have Stories**
-[ ] User logs in to access previous chats and preference settings
-[ ] Users can post new items they want to sell, set the price and add filters. 
-[ ] The main feed will have posts, description, price on items. Users can add filters.
-[ ] Profile pages for each user
-[ ] Settings (Accesibility, Notification, General, etc.)
+- [ ] User logs in to access previous chats and preference settings
+- [ ] Users can post new items they want to sell, set the price and add filters. 
+- [ ] The main feed will have posts, description, price on items. Users can add filters.
+- [ ] Profile pages for each user
+- [ ] Settings (Accesibility, Notification, General, etc.)
 
 
 ### 2. Screen Archetypes
