@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">marketplaceapp</string>
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Paste BOTH strings as required -->
+    <string name="back4app_app_id">1clpRWfG3mLbiozH0txWHy6klQ8qWlFap5ajRzJS</string>
+    <string name="back4app_client_key">YVghUr0W4Zgd6eyP0xx5FJNzrMIBKH5boNFQUjY2</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
