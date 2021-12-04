@@ -28,9 +28,9 @@ A marketplace application where users can buy and sell items. There will be filt
 **Required Must-have Stories**
 - [x] User logs in to access previous chats and preference settings
 - [x] Users can post new items they want to sell,and set the price. 
-- [ ] The main feed will have posts, description, price on items.
+- [x] The main feed will have posts, description, price on items.
 - [ ] Profile pages for each user
-- [ ] Settings (Accesibility, General, etc.)
+- [ ] Messages feed where user can message each other and negotiate.
 
 
 ### 2. Screen Archetypes
