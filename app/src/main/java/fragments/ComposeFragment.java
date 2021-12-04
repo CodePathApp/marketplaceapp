@@ -8,9 +8,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -23,18 +23,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.marketplaceapp.MainActivity;
+import com.example.marketplaceapp.ImageAdapter;
+import com.example.marketplaceapp.Images;
 import com.example.marketplaceapp.Post;
 import com.example.marketplaceapp.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -55,7 +54,12 @@ public class ComposeFragment extends Fragment {
     private Button btnSubmitImage;
     private ImageView ivPostImage;
     private File photoFile;
+    private List<File> photeFiles = new ArrayList<>();
     public String photoFileName = "photo.jpg";
+
+    private ViewPager vpPostImages;
+    private ImageAdapter adapter;
+    private List<Bitmap> mImages;
 
 
     public ComposeFragment() {
@@ -80,10 +84,15 @@ public class ComposeFragment extends Fragment {
 
         etDescription = view.findViewById(R.id.etDescription);
         btnCaptureImage = view.findViewById(R.id.btnCaptureImage);
-        ivPostImage = view.findViewById(R.id.ivPostImage);
+        //ivPostImage = view.findViewById(R.id.ivPostImage);
         etCaption = view.findViewById(R.id.etCaption);
         etPrice = view.findViewById(R.id.etPrice);
         btnSubmitImage = view.findViewById(R.id.btnSubmitImage);
+
+        vpPostImages = view.findViewById(R.id.vpPostImages);
+        adapter = new ImageAdapter(getContext());
+        vpPostImages.setAdapter(adapter);
+
         btnCaptureImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,15 +103,15 @@ public class ComposeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String description = etDescription.getText().toString();
-                String price = etPrice.getText().toString();
                 String caption = etCaption.getText().toString();
+                int price = Integer.parseInt(etPrice.getText().toString());
                 if (description.isEmpty()){
                     Toast.makeText(getContext(),"Description cannot be empty",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(photoFile == null || ivPostImage.getDrawable()==null){
+                /*if(photoFile == null || ivPostImage.getDrawable()==null){
                     Toast.makeText(getContext(),"There is no image!",Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(description,currentUser,price,caption);//savePost(description,currentUser,photoFile);
             }
@@ -117,9 +126,9 @@ public class ComposeFragment extends Fragment {
         // wrap File object into a content provider
         // required for API >= 24
         // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileprovider.marketplaceapp", photoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
+        photeFiles.add(photoFile);
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
         // So as long as the result is not null, it's safe to use the intent.
         if (intent.resolveActivity(getContext().getPackageManager()) != null) {
@@ -156,20 +165,21 @@ public class ComposeFragment extends Fragment {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
-                btnCaptureImage.setText("Post");
-                ivPostImage.setImageBitmap(takenImage);
+                           //ivPostImage.setImageBitmap(takenImage);
+                adapter.addImage(takenImage);
+                //mImages.add(takenImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void savePost(String description, ParseUser currentUser, String price, String caption) {
+    private void savePost(String description, ParseUser currentUser, int price, String caption) {
         Post post = new Post();
-        post.setDescription(description);
         post.setCaption(caption);
         post.setPrice(price);
         post.setUser(currentUser);
+        post.setDescription(description);
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -179,10 +189,26 @@ public class ComposeFragment extends Fragment {
                 }
                 Log.i(TAG,"Post save was successful");
                 etDescription.setText("");
-                ivPostImage.setImageResource(0);
-                btnCaptureImage.setText("Take Picture");
+                etPrice.setText("");
+                etCaption.setText("");
+                //ivPostImage.setImageResource(0);
+                File[] arr = new File[photeFiles.size()];
+                photeFiles.toArray(arr); // fill the array
+                for(int i =0 ;i< arr.length;i++) {
+                    Images image = new Images();
+                    image.setImage(new ParseFile(arr[i]));
+                    image.setPost(post);
+                    image.saveInBackground();
+                }
             }
         });
+        /*File[] arr = new File[photeFiles.size()];
+        photeFiles.toArray(arr); // fill the array
+        for(int i =0 ;i< arr.length;i++){
+            Image image = new Image();
+            image.setImage(new ParseFile(arr[i]));
+            image.setPost(post);*/
+
     }
 
 }
